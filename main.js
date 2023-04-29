@@ -28,8 +28,32 @@ ball = {
     dy:3
 }
 
+function preload() {
+  ballTouchPaddel = loadSound("ball_touch_paddel.wav");
+  missed = loadSound("missed.wav");
+  
+}
+
 function setup(){
   canvas =  createCanvas(700,550);
+  video = createCapture(VIDEO)
+	video.size(700, 550)
+  video.hide()
+	poseNet = ml5.poseNet(video, modelLoaded)
+	poseNet.on("pose", gotPoses)
+}
+
+function modelLoaded() {
+    console.log("modelo carregado")
+}
+
+function gotPoses(results) {
+	if (results.lenght>0) {
+		console.log(scoreRightWrist)
+		rightWristX = results[0].pose.rightWrist.x;
+		rightWristY = results[0].pose.rightWrist.y;
+    scoreRightWrist = results[0].pose.keypoints[10].score;
+	}
 }
 
 
